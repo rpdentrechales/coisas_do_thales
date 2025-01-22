@@ -1,6 +1,6 @@
 import streamlit as st
 from pymongo import MongoClient, UpdateOne
-import datetime
+from datetime import datetime
 
 st.set_page_config(page_title="Exemplo Requisição MongoDB com Filtros", page_icon="💰", layout="wide")
 
