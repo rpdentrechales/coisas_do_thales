@@ -36,8 +36,8 @@ data_input = st.date_input(
     format="DD/MM/YYYY",
 )
 
-data_inicial = data_input[0]
-data_final = data_input[1]
+data_inicial = datetime.combine(data_input[0], datetime.min.time())
+data_final = datetime.combine(data_input[1], datetime.max.time())
 
 # Faz a query
 
