@@ -1,4 +1,5 @@
 import streamlit as st
+import certifi
 from pymongo import MongoClient, UpdateOne
 from datetime import datetime
 import pandas as pd
@@ -6,24 +7,26 @@ import pandas as pd
 st.set_page_config(page_title="Exemplo Requisição MongoDB sem Filtros", page_icon="💰", layout="wide")
 
 # Função auxiliar para pegar os dados do MongoDB
-@st.cache_data
-def get_dataframe_from_mongodb(collection_name, database_name, query={}):
-    uri = "mongodb+srv://thalesprocorpoestetica:Proc%402025@cluster0.tkcrpgj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+@st.cache_data(show_spinner="📡 Pulling from MongoDB…")
+def get_dataframe_from_mongodb(
+        collection_name: str,
+        database_name: str,
+        query: dict | None = None
+) -> pd.DataFrame:
+    query = {} if query is None else query
 
-    client = MongoClient(uri)
-    db = client[database_name]
-    collection = db[collection_name]
+    # Never hard-code secrets – read them from an env-var or secrets manager
+    uri = "mongodb+srv://thalesprocorpoestetica:Proc%402025@cluster0.tkcrpgj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"      # mongodb+srv://user:pass@cluster0.…
+    client = MongoClient(
+        uri,
+        serverSelectionTimeoutMS=10000,    # 10 s is enough for Atlas
+        tls=True,
+        tlsCAFile=certifi.where()          # <- key line: use up-to-date bundle
+    )
 
-    data = list(collection.find(query))
-
-    if data:
-        dataframe = pd.DataFrame(data)
-        if '_id' in dataframe.columns:
-            dataframe = dataframe.drop(columns=['_id'])
-    else:
-        dataframe = pd.DataFrame()
-
-    return dataframe
+    data = list(client[database_name][collection_name].find(query))
+    df = pd.DataFrame(data).drop(columns=["_id"], errors="ignore")
+    return df
 
 st.title("Exemplo Requisição MongoDB sem Filtros")
 
