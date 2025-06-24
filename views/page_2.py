@@ -38,7 +38,9 @@ if botao_fazer_query:
 
 
 if st.button("Check errors"):
-    
+    uri = "mongodb+srv://thalesprocorpoestetica:Proc%402025@cluster0.tkcrpgj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+    client = MongoClient(uri)
     try:
         # forces a roundtrip to the server
         client.admin.command("ping")
