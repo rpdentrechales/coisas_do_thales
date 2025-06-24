@@ -20,7 +20,7 @@ page_2 = st.Page(
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 pg = st.navigation(
     {
-        "Páginas": [page_1]
+        "Páginas": [page_1,page_2]
     }
 )
 
