@@ -40,12 +40,13 @@ if botao_fazer_query:
 if st.button("Check errors"):
     uri = "mongodb+srv://thalesprocorpoestetica:Proc%402025@cluster0.tkcrpgj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
-    client = MongoClient(uri)
-    try:
-        # forces a roundtrip to the server
-        client.admin.command("ping")
-        st.write("✔ Connection to MongoDB OK")
-        print("✔ TLS handshake OK")
-    except ConnectionFailure as exc:
-        print("❌", exc)
-        st.write("❌", exc)
+    client = MongoClient(
+        uri,
+        serverSelectionTimeoutMS=10_000,
+        tls=True,
+        tlsAllowInvalidCertificates=True  # <-- DEBUG ONLY
+    )
+    print(client.admin.command("ping"))
+    st.write(client.admin.command("ping"))
+    client.close()
+
