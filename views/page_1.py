@@ -8,9 +8,8 @@ st.set_page_config(page_title="Exemplo Requisição MongoDB com Filtros", page_i
 # Função auxiliar para pegar os dados do MongoDB
 @st.cache_data
 def get_dataframe_from_mongodb(collection_name, database_name, query={}):
-    uri = "mongodb+srv://thalesprocorpoestetica:Proc%402025@cluster0.tkcrpgj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
-    client = MongoClient(uri)
+    client = MongoClient(f"mongodb+srv://rpdprocorpo:iyiawsSCfCsuAzOb@cluster0.lu6ce.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     db = client[database_name]
     collection = db[collection_name]
 
@@ -50,5 +49,3 @@ if botao_fazer_query:
   billcharges_df = get_dataframe_from_mongodb(collection_name="billcharges_db", database_name="dash_midia",query=query)
 
   st.dataframe(billcharges_df)
-
-
